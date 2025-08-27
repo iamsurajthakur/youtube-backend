@@ -23,8 +23,6 @@ const uploadImage = async (imagePath) => {
     };
 
     try {
-        if (!imagePath) return null
-
         // Upload the image
         const result = await cloudinary.uploader.upload(imagePath, options);
         console.log(result);
@@ -34,9 +32,9 @@ const uploadImage = async (imagePath) => {
         throw error
     } finally {
         try{
-            await fs.unlink(imagePath) // remove the saved file it upload failed
+            await fs.unlink(imagePath) // cleanup the saved file if upload failed
         } catch (unLinkError){
-            console.warn("Failed to delete temp file:", unlinkError.message);
+            console.warn("Failed to delete temp file:", unLinkError.message);
         }
     }
 };
