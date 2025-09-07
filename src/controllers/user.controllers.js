@@ -99,7 +99,7 @@ const loginUser = asyncHandler(async (req,res) => {
 
     const {username, email, password} = req.body
 
-    if(!username || !email){
+    if(!(username || email)){
         throw new apiError(400,'Please provide username or email.')
     }
 
@@ -115,8 +115,8 @@ const loginUser = asyncHandler(async (req,res) => {
     }
 
     const isPasswordValid = await user.isPasswordCorrect(password)
-
-    if(isPasswordValid){
+    
+    if(!isPasswordValid){
         throw new apiError(401,'Password incorrect.')
     }  
     
