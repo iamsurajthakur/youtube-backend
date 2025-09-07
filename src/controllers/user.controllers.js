@@ -169,7 +169,7 @@ const logoutUser = asyncHandler(async (req,res) => {
     .json(new ApiResponse(200, {}, 'User logout.'))
 })
 
-export default {
+export {
     registerUser,
     loginUser,
     logoutUser
