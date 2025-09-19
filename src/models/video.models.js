@@ -31,7 +31,7 @@ const videoSchema = new Schema({
         type: Boolean,
         default: true,
     },
-    videoOwner: {
+    owner: {
         type: Schema.Types.ObjectId,
         ref: "User"
     }
@@ -39,4 +39,4 @@ const videoSchema = new Schema({
 
 videoSchema.plugin(mongooseAggregatePaginate)
 
-export const Video = mongoose.model("video0", videoSchema) 
+export const Video = mongoose.model("video", videoSchema) 

@@ -5,7 +5,6 @@ import uploadOnCloudinary from "../utils/fileUpload.js"
 import ApiResponse from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 import ApiError from "../utils/apiError.js";
-import { response } from "express";
 import mongoose from "mongoose";
 
 const generateAccessAndRefreshTokens = async(userId) => {
@@ -237,7 +236,7 @@ const changeCurrentPassword = asyncHandler(async (req,res) => {
     user.password = newPassword
     await user.save({validateBeforeSave: false})
 
-    return response
+    return res
     .status(200)
     .json(
         new ApiResponse(200, {} ,"Password changed successfully")
@@ -253,9 +252,9 @@ const getCurrentUser = asyncHandler(async (req,res) => {
 })
 
 const updateAccountDetails = asyncHandler(async (req,res) => {
-    const {fullName, email} = req.body
+    const {fullname, email} = req.body
 
-    if(!fullName || !email){
+    if(!fullname || !email){
         throw new apiError(400,"All feild required")
     }
 
@@ -263,7 +262,7 @@ const updateAccountDetails = asyncHandler(async (req,res) => {
         req.user?._id,
         {
             $set: {
-                fullName,
+                fullname,
                 email
             }
         },
@@ -331,6 +330,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
 })
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
+    
     const {username} = req.params
 
     if(!username?.trim()){
@@ -401,11 +401,11 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     )
 })
 
-const getWatchHistory = asyncHandler(async (req,res) => {
+const getWatchHistory = asyncHandler(async(req, res) => {
     const user = await User.aggregate([
         {
             $match: {
-                _id: new mongoose.ObjectId(req.user._id)
+                _id: new mongoose.Types.ObjectId(req.user._id)
             }
         },
         {
@@ -433,8 +433,8 @@ const getWatchHistory = asyncHandler(async (req,res) => {
                         }
                     },
                     {
-                        $addFields: {
-                            owner: {
+                        $addFields:{
+                            owner:{
                                 $first: "$owner"
                             }
                         }
@@ -446,7 +446,13 @@ const getWatchHistory = asyncHandler(async (req,res) => {
 
     return res
     .status(200)
-    .json(new ApiResponse(200, user[0].watchHistory, "Watch history fetched successfully."))
+    .json(
+        new ApiResponse(
+            200,
+            user[0].watchHistory,
+            "Watch history fetched successfully"
+        )
+    )
 })
 
 export {
